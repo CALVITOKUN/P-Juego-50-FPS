@@ -1,20 +1,151 @@
-<!DOCTYPE html>
-<html lang="es">
+</html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="imagenes/icons/icons8-game-soft-fill-96.png">
-    <title>GAME OVER</title>
-    <script src="js/juego.js"></script>
-    <style>
-        body{
-            background-image: url(imagenes/BLOCK-03.jpg);
-        }
-    </style>
+  <title>JUEGO</title>
+
+  <script src='js/howler.core.js'></script>
+  <script src='js/juego.js'></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+  <style>
+    body{
+      background-image: url('img/6d62076f79673b5.gif');
+    }
+    div.container{
+      margin: 0 auto;
+    }
+    div.row{
+
+      margin: 0 auto;
+      
+    }
+    #score{
+      
+      width: 50%;
+      margin-left: -15%;
+      position:fixed;
+    }
+    #botones{
+      margin-left: 60%;
+      position:fixed;
+      width: 10%;
+      
+      
+    }
+    label{
+      font-size: 20px;
+      color: red;
+    }
+    p{
+      width: 100%;
+      text-align: center;
+      background-color: blue;
+      font-size: 20px;
+    }
+    
+  </style>
+
+
 </head>
-<body onload="inicializa()">
-    <br><br><br>
-    <center><canvas id="canvas" style=" width:1000px; height:800px; border:2px solid black; margin:0 auto;"></canvas></center>
+
+<body onload='inicializa();'>
+  <div class="container">
+    <div class="row" style="text-align: center;">
+      <h2 style="text-align:center;">GAME TIME</h2>
+    </div>
+    <div class="row" id="score">
+      <div class="col-4">
+        <label>SCORE</label>
+        <p id="puntos">0</p>
+        <label>KEY</label>
+        <p id="key">0</p>
+        <label>LIVE</label>
+        <p id="live">1</p>
+        <label>HIGH SCORE</label>
+        <p id="hgscore">0</p>
+      </div>
+    </div>
+    <div id="botones">
+                
+     
+      
+      <button type="button" onclick="dellocal()" class="btn btn-primary btn-lg btn-block">BORRAR LOCAL</button>
+      
+      <button type="button" onclick="delsesion()" class="btn btn-primary btn-lg btn-block">BORRAR SESION</button>
+      
+    </div>
+      <div class="col-8">
+        <canvas id='canvas' width='750' height='500' style='border:2px solid #000000;margin-left: 10%;' ></canvas>
+      </div>
+  </div>
+
+  
+  <br>
+  
+<script>
+  function local(){
+            
+
+            /*document.getElementById("local").style.backgroundColor = document.getElementById("color").value ;
+            document.getElementById("local").innerHTML = "<div style='text-align:center;'>"+"<p style='padding-top:5px;'>" + document.getElementById("name").value  + "</p>" + "<p>" +
+            document.getElementById("direccion").value + "</p>" + "<p>" +document.getElementById("telefono").value + "</p>" + "</div>";*/
+            
+            let puntos = document.getElementById('puntos').value;
+            let lives = document.getElementById('live').value;
+            let llave = document.getElementById('llave').value;
+
+            localStorage.setItem('puntos',puntos);
+            localStorage.setItem('live',lives);
+            localStorage.setItem('llave',llave);
+            
+
+            document.getElementById('local').innerHTML = '<br><strong><h3 style="text-align:center;">' + localStorage.getItem('puntos') + '</strong></h3><br>' + '<h4 style="text-align:center;">' + localStorage.getItem('live') +'</h4><br>' + '<h4 style="text-align:center;">' + localStorage.getItem('llave') + '</h4><br>';
+            
+        }
+
+        function sesion(){
+            
+            
+            
+
+            /*document.getElementById("local").style.backgroundColor = document.getElementById("color").value ;
+            document.getElementById("local").innerHTML = "<div style='text-align:center;'>"+"<p style='padding-top:5px;'>" + document.getElementById("name").value  + "</p>" + "<p>" +
+            document.getElementById("direccion").value + "</p>" + "<p>" +document.getElementById("telefono").value + "</p>" + "</div>";*/
+            
+            let nombre = document.getElementById('puntos').value;
+            let direccion = document.getElementById('live').value;
+            let telefon = document.getElementById('llave').value;
+
+            sessionStorage.setItem('puntos',puntos);
+            sessionStorage.setItem('live',lives);
+            sessionStorage.setItem('llave',llave);
+         
+
+            document.getElementById('sesion').innerHTML = '<br><strong><h3 style="text-align:center;">' + sessionStorage.getItem('puntos') + '</strong></h3><br>' + '<h4 style="text-align:center;">' + sessionStorage.getItem('life') +'</h4><br>' + '<h4 style="text-align:center;">' + sessionStorage.getItem('llave') + '</h4><br>';
+        }
+        function dellocal(){
+            
+            
+            localStorage.removeItem('puntos');
+            localStorage.removeItem('live');
+            localStorage.removeItem('llave');
+
+            
+            document.getElementById('local').innerHTML = '<br><strong><h3 style="text-align:center;">' + localStorage.removeItem('puntos') + '</strong></h3><br>' + '<h4 style="text-align:center;">' + localStorage.removeItem('live') +'</h4><br>' + '<h4 style="text-align:center;">' + localStorage.removeItem('llave') + '</h4><br>';
+            
+        }
+
+        function delsesion(){
+            
+            sessionStorage.removeItem('puntos');
+            sessionStorage.removeItem('live');
+            sessionStorage.removeItem('llave');
+          
+            
+            document.getElementById('puntos').innerHTML = '<br><strong><h3 style="text-align:center;">' +  sessionStorage.removeItem('puntos') + '</strong></h3><br>' + '<h4 style="text-align:center;">' +  sessionStorage.removeItem('live') +'</h4><br>' + '<h4 style="text-align:center;">' +  sessionStorage.removeItem('llave') + '</h4><br>';
+            
+    
+        }
+</script>
 </body>
+
 </html>
