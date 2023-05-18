@@ -14,11 +14,12 @@ var protagonista;
 
 var enemigo=[]; // Array de enemigos
 var cerdo=[]; // Array de enemigos
-
+let marcadorllaves;
+let marcadorPuntos;
 var imagenAntorcha; 
 var imagenlava;
 let tileMap;
-
+localStorage.puntosmaxLabel = "puntosLabel";
 
 var musica;
 var sonido1, sonido2, sonido3;
@@ -44,7 +45,7 @@ sonido3 = new Howl({
   loop: false
 });
 
-let fase = 0;
+let fase = 1;
 
 let victoria;
 
@@ -63,7 +64,7 @@ let escenario = [
   [0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0],
   [0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0],
   [0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0],
-  [0,2,2,2,2,2,2,2,2,2,2,2,2,2,1,2,2,3,2,0],
+  [0,2,2,2,2,2,2,2,2,2,2,2,2,2,1,2,2,0,2,0],
   [0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0],
   [0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0],
   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
@@ -73,7 +74,7 @@ let escenario2 = [
   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
   [0,2,2,0,0,0,2,2,2,2,0,0,2,2,2,2,0,0,0,0],
   [0,0,2,2,2,2,2,0,0,2,0,0,2,0,0,0,0,0,0,0],
-  [0,0,2,0,0,0,2,2,0,2,2,2,2,0,0,0,0,0,0,0],
+  [0,0,2,2,0,0,2,2,0,2,2,2,2,0,0,0,0,0,0,0],
   [0,0,2,2,2,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0],
   [0,2,2,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0],
   [0,0,2,0,0,0,2,2,2,0,0,2,2,2,0,0,0,0,0,0],
@@ -90,6 +91,27 @@ let escenario2 = [
   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 ]
 
+let escenario3 = [
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  [0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0],
+  [0,2,0,0,0,0,0,2,0,2,2,2,0,2,0,0,0,0,2,0],
+  [0,2,0,2,2,2,2,2,0,2,2,2,0,2,0,2,2,0,2,0],
+  [0,2,0,2,2,2,2,2,0,0,2,2,0,2,0,2,2,2,0,0],
+  [0,2,0,2,2,2,2,2,0,2,0,2,0,2,0,2,2,2,0,0],
+  [0,2,0,2,2,2,2,2,0,2,0,2,0,2,0,2,2,2,0,0],
+  [0,2,0,2,2,2,2,2,0,2,0,2,0,2,0,2,2,2,0,0],
+  [0,2,0,0,0,0,0,2,0,2,0,2,0,2,0,2,2,2,0,0],
+  [0,2,0,2,2,2,2,2,0,2,0,2,0,2,0,2,2,2,0,0],
+  [0,2,0,2,2,2,2,2,0,2,0,2,0,2,0,2,2,2,0,0],
+  [0,2,0,2,2,2,2,2,0,2,0,2,0,2,0,2,2,2,0,0],
+  [0,2,0,2,2,2,2,2,0,2,0,2,0,2,0,2,2,2,0,0],
+  [0,2,0,2,2,2,2,2,0,2,2,0,0,2,0,2,2,2,0,0],
+  [0,2,0,2,2,2,2,2,0,2,2,0,0,2,0,2,2,0,2,0],
+  [0,2,0,0,0,0,0,2,0,2,2,2,0,2,0,0,0,2,2,0],
+  [0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0],
+  [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+]
+
 // DIBUJO EL ESCENARIO
 
 function dibujaEscenario(){
@@ -97,14 +119,17 @@ function dibujaEscenario(){
   for(y=0;y<18;y++){
     for(x=0;x<20;x++){
 
-      if (fase== 1){
+      if (fase==1){
       var tile = escenario[y][x];
       ctx.drawImage(tileMap,tile*32,0,32,32,anchoF*x,altoF*y,anchoF,altoF);
-    } else {
+    } else {if(fase==2){
       
       var tile = escenario2[y][x];
       ctx.drawImage(tileMap,tile*32,0,32,32,anchoF*x,altoF*y,anchoF,altoF);
-    }
+    }else{
+      var tile = escenario3[y][x];
+      ctx.drawImage(tileMap,tile*32,0,32,32,anchoF*x,altoF*y,anchoF,altoF);
+    }}
   }
 }
 }
@@ -176,21 +201,18 @@ var malo = function(x,y){
 
 
     this.compruebaColision = function(x,y){
-        var colisiona = false;
-
-        if(escenario[y][x]==0){
-          colisiona = true;
+      var colision = false ;
+        if(fase==1){
+          if(escenario[y][x]==0){
+            colision = true;
+          }
+        }else{
+          if(escenario2[y][x]==0){
+            colision = true;
+          }
         }
-        return colisiona;
-    }
-    this.compruebaColision = function(x,y){
-      var colisiona = false;
-
-      if(escenario2[y][x]==0){
-        colisiona = true;
+        return colision;
       }
-      return colisiona;
-  }
 
     this.mueve = function(){
 
@@ -273,21 +295,19 @@ var cerdoo = function(x,y){
 
 
   this.compruebaColision = function(x,y){
-      var colisiona = false;
-
+    var colision = false;
+    if(fase==1){
       if(escenario[y][x]==0){
-        colisiona = true;
+        colision=true;
       }
-      return colisiona;
-  }
-  this.compruebaColision = function(x,y){
-    var colisiona = false;
-
-    if(escenario2[y][x]==0){
-      colisiona = true;
+    }else{
+      if(escenario2[y][x]==0){
+        colision = true;
+      }
     }
-    return colisiona;
-}
+    return colision;
+  }
+
 
   this.mueve = function(){
 
@@ -376,23 +396,18 @@ var jugador = function(){
 
   this.margenes = function(x,y){
     var colision = false;
-
-    if(escenario[y][x]==0){
-      colision = true;
-    }
-
+    if (fase==1){
+      if(escenario[y][x]==0){
+      colision = true;}
+    }else
+    {if(escenario2[y][x]==0){
+      colision = true;}
+    else{
+      if(escenario3[y][x]==0){
+      colision=true;}}}
     return(colision);
   }
-  this.margenes = function(x,y){
-    var colision = false;
-
-    if(escenario[y][x]==0){
-      colision = true;
-    }
-
-    return(colision);
-  }
-
+  
 
 
   this.arriba = function(){
@@ -423,15 +438,11 @@ var jugador = function(){
       this.logicaObjetos();
     }
   }
-
+  
   this.victoria = function(){
 
     sonido3.play();
     console.log('Has ganado!');
-    puntos = puntos +100
-    if (puntos>puntosmax){
-     localStorag.setItem('puntos',puntosmax);
-    }
 
     this.x = 1;
     this.y = 1;
@@ -448,11 +459,11 @@ var jugador = function(){
 
     this.x = 1;
     this.y = 1;
-
+    
     this.llave = false;   //el jugador ya no tiene la llave
     escenario[8][3] = 3;  //volvemos a poner la llave en su sitio
+  
   }
-
   
 
 
@@ -461,18 +472,25 @@ var jugador = function(){
   this.logicaObjetos = function(){
     var objeto = escenario[this.y][this.x];
 
+
     //OBTIENE LLAVE
     if(objeto == 3){
-
       sonido2.play();
 
       this.llave = true;
-      escenario[this.y][this.x]=2;
+      /*escenario[this.y][this.x]=3;
+      escenario2[this.y][this.x]=3;*/ 
+      let marcadorllave = document.getElementById("llave");
+      let catidadllave = parseInt(marcadorllave.textContent);
+      cantidadllave +=1;
+      marcadorllave.textContent = catidadllave.toString();
+      let marcadorpuntos = document.getElementById("puntos");
+      let cantidadpuntos = parseInt(marcadorpuntos.textContent);
+      puntos = puntos +50;
+      cantidadpuntos.textContent = cantidadpuntos.toString();
 
       console.log('Has obtenido la llave!!');
-      puntos = puntos +50;
-      sessionStorage.setItem("puntos",puntos);
-      document.getElementById('puntos').innerHTML = sessionStorage.getElementById("puntos");
+      alert('BUSCA LA SALIDA CORRECTA');
     }
 
 
@@ -481,8 +499,8 @@ var jugador = function(){
     if(objeto == 1){
       if(this.llave == true)
         this.victoria(fase++)
-        let marcadorPuntos = document.getElementById("puntos");
-      let cantidadpuntos = parseInt(marcadorPuntos.textContent);
+        let marcadorpuntos = document.getElementById("puntos");
+      let cantidadpuntos = parseInt(marcadorpuntos.textContent);
       cantidadpuntos +=100;
       cantidadpuntos.textContent = cantidadpuntos.toString();}
       else{
@@ -494,7 +512,7 @@ var jugador = function(){
 
   }
 
-0
+
 var jugador = function(){
   this.x = 1;
   this.y = 1;
@@ -519,12 +537,17 @@ var jugador = function(){
   this.margenes = function(x,y){
     var colision = false;
 
-    if(escenario2[y][x]==0){
-      colision = true;
+      if(fase==1){
+        if(escenario[y][x]==0){
+          colision=true;
+        }
+      }else{
+        if(escenario2[y][x]==0){
+          colision = true;
+        }
+      }
+      return colision;
     }
-
-    return(colision);
-  }
 
 
 
@@ -561,7 +584,7 @@ var jugador = function(){
 
     sonido3.play();
     console.log('Has ganado!');
-    puntos = puntos +100
+    puntos = puntos +100;
     if (puntos>puntosmax){
      localStorag.setItem('puntos',puntosmax);}
 
@@ -583,6 +606,7 @@ var jugador = function(){
 
     this.llave = false;   //el jugador ya no tiene la llave
     escenario2[14][17] = 3;  //volvemos a poner la llave en su sitio
+    
   }
  
 
@@ -595,13 +619,22 @@ var jugador = function(){
     if(objeto == 3){
 
       sonido2.play();
-
+      if(fase==1){
       this.llave = true;
-      escenario2[this.y][this.x]=2;
-
+      escenario[this.y][this.x]=2;
+      window.alert('Has obtenido la llave!!');
       console.log('Has obtenido la llave!!');
-      
+      }else{
+        this.llave = true;
+      escenario2[this.y][this.x]=2;
+      window.alert('Has obtenido la llave!!');
+      console.log('Has obtenido la llave!!');
+      }
+    
     }
+    
+      
+
 
 
 
@@ -609,13 +642,17 @@ var jugador = function(){
     if(objeto == 1){
       if(this.llave == true)
         this.victoria(fase++)
+       
         let marcadorPuntos = document.getElementById("puntos");
       let cantidadpuntos = parseInt(marcadorPuntos.textContent);
       cantidadpuntos +=100;
+
       cantidadpuntos.textContent = cantidadpuntos.toString();}
+      
       else{
-		  
+       
         console.log('No tienes la llave, no puedes pasar!');
+       
       }
     }
 
@@ -643,7 +680,7 @@ function inicializa(){
   imagenAntorcha1 = new antorcha(0,17);
   imagenAntorcha2 = new antorcha(19,0);
   imagenAntorcha3 = new antorcha(19,17);
-  imagenAntorcha4 = new antorcha(3,6);
+
  
     //CREAMOS LA lava
     imagenlava= new lava(1,15);
@@ -696,7 +733,16 @@ function borraCanvas(){
 }
 
 //marcador
+const puntosLabel = document.getElementById("puntos");
+const llaveLabel = document.getElementById("llave");
+const liveLabel = document.getElementById("live");
+const puntosmaxLabel = document.getElementById("puntosmax");
 
+//marcador predeterminado
+const puntosPredeterminados = 0;
+const llavePredeterminados = 0;
+const livePredeterminadas = 1;
+const puntosmaxPredeterminados = 0;
 
 // GENERA TODO EL MOVIMIENTO DEL JUEGO
 
@@ -707,7 +753,7 @@ function principal(){
   imagenAntorcha1.dibuja();
   imagenAntorcha2.dibuja();
   imagenAntorcha3.dibuja();
-  imagenAntorcha4.dibuja();
+
   imagenlava.dibuja();
   protagonista.dibuja();
 
